@@ -1,23 +1,20 @@
-﻿using MauiCRUD_App.ViewModels;
+namespace MauiCRUD_App;
+using MauiCRUD_App.Data;
+using MauiCRUD_App.ViewModels;
 
-
-namespace MauiCRUD_App
+public partial class MainPage : ContentPage
 {
-    public partial class MainPage : ContentPage
+
+    private readonly ProductsViewModel _productsViewModel;
+    public MainPage()
+	{
+        InitializeComponent();
+        var databaseContext = new DatabaseContext();
+        _productsViewModel = new ProductsViewModel(databaseContext);
+    }
+
+    async void OnButton_Clicked(object sender, EventArgs e)
     {
-        private readonly ProductsViewModel _productsViewModel;
-
-        public MainPage(ProductsViewModel productsViewModel)
-        {
-            InitializeComponent();
-            BindingContext = productsViewModel;
-            _productsViewModel = productsViewModel;
-        }
-
-        protected async override void OnAppearing()
-        {
-            base.OnAppearing();
-            await _productsViewModel.LoadProductsAsync();
-        }
+        await Navigation.PushAsync(new DetailsPage(_productsViewModel));
     }
 }
